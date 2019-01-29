@@ -1,13 +1,6 @@
 const postcss = require('postcss');
 const parser = require('postcss-values-parser');
 
-// The set of properties that can have comma-separated values, some of which can be in pixel units
-const csvProps = [
-	'background',
-	'background-size',
-	'background-position'
-];
-
 /**
 * The configurable options that can be passed into `ResolutionIndependence`.
 *
@@ -48,21 +41,17 @@ module.exports = postcss.plugin('postcss-resolution-independence',
 				// The standard unit to convert (if no unit, we assume the base unit)
 				if (numberNode.unit === unit) {
 					const scaledValue = Math.abs(value * minScaleFactor);
-					return numberNode.replaceWith(parser.number((scaledValue && scaledValue <= minUnitSize) ?
-						{
-							value: Math.abs(value) < minUnitSize ? value : minUnitSize * (value < 0 ? -1 : 1),
-							unit: unit
-						} :
-						{
-							value: parseFloat((value / baseSize).toFixed(precision)),
-							unit: riUnit
-						}));
+					if(scaledValue && scaledValue <= minUnitSize) {
+						numberNode.value = Math.abs(value) < minUnitSize ? value : minUnitSize * (value < 0 ? -1 : 1);
+						numberNode.unit = unit;
+					} else {
+						numberNode.value = parseFloat((value / baseSize).toFixed(precision));
+						numberNode.unit = riUnit;
+					}
 				} else if (numberNode.unit === absoluteUnit) {
 					// The absolute unit to convert to our standard unit
-					numberNode.replaceWith(parser.number({
-						value: value,
-						unit: unit
-					}));
+					numberNode.value = value;
+					numberNode.unit = unit;
 				}
 			});
 			decl.value = nodes.toString();
