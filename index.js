@@ -12,7 +12,7 @@ const parser = require('postcss-values-parser');
 * @property {String} unit="px" - The unit of measurement we wish to convert to resolution-independent
 *	units.
 * @property {String} absoluteUnit="apx" - The unit of measurement to ignore for
-*	resolution-independence conversion, and instead should be 1:1 converted to our `_unit` unit.
+*	resolution-independence conversion, and instead should be 1:1 converted to our `unit` unit.
 * @property {Number} minUnitSize=1 - The minimum unit size (as an absolute value) that any
 *	measurement should be valued at the lowest device resolution we wish to support. This allows
 *	for meaningful measurements that are not unnecessarily scaled down excessively.
@@ -36,29 +36,25 @@ module.exports = postcss.plugin('postcss-resolution-independence',
 	return (css) => {
 		css.walkDecls(decl => {
 			const nodes = parser(decl.value, {loose: true}).parse()
-			nodes.walkNumberNodes(numberNode => {
-				const value = parseFloat(numberNode.value)
+			nodes.walkNumberNodes(node => {
+				const value = parseFloat(node.value)
 				// The standard unit to convert (if no unit, we assume the base unit)
-				if (numberNode.unit === unit) {
+				if (node.unit === unit) {
 					const scaledValue = Math.abs(value * minScaleFactor);
-					if(scaledValue && scaledValue <= minUnitSize) {
-						numberNode.value = Math.abs(value) < minUnitSize ? value : minUnitSize * (value < 0 ? -1 : 1);
-						numberNode.unit = unit;
+					if (scaledValue && scaledValue <= minUnitSize) {
+						if (Math.abs(value) >= minUnitSize) {
+							node.value = minUnitSize * (value < 0 ? -1 : 1);
+						}
 					} else {
-						numberNode.value = parseFloat((value / baseSize).toFixed(precision));
-						numberNode.unit = riUnit;
+						node.value = parseFloat((value / baseSize).toFixed(precision));
+						node.unit = riUnit;
 					}
-				} else if (numberNode.unit === absoluteUnit) {
+				} else if (node.unit === absoluteUnit) {
 					// The absolute unit to convert to our standard unit
-					numberNode.value = value;
-					numberNode.unit = unit;
+					node.unit = unit;
 				}
 			});
 			decl.value = nodes.toString();
-
-			//console.log(decl.value)
-			//console.log(parser(decl.value, {loose:true}).parse().first)
-			//process.exit(0)
 		});
 	};
 });
