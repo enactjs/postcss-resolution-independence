@@ -10,7 +10,7 @@ const processValue = ({css, value = 48, unit = 'px'} = {}) => (
 	postcss([riPlugin(opts)])
 			.process(css || `width: ${value}${unit};`, {from: undefined})
 			.then(function (result) {
-		return parser(result.root.nodes[0].value, {loose:true}).parse();
+		return parser(result.root.nodes[0].value, {ignoreUnknownWords:true}).parse();
 	})
 );
 
