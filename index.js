@@ -1,5 +1,4 @@
-const postcss = require('postcss');
-const parser = require('postcss-values-parser');
+const {parse} = require('postcss-values-parser');
 
 /**
 * The configurable options that can be passed into `ResolutionIndependence`.
@@ -37,8 +36,8 @@ module.exports =
 		postcssPlugin: 'postcss-resolution-independence',
 		Once (css) {
 			css.walkDecls(decl => {
-				const nodes = parser(decl.value, {ignoreUnknownWords: true}).parse()
-				nodes.walkNumberNodes(node => {
+				const nodes = parse(decl.value, {ignoreUnknownWords: true})
+				nodes.walkNumerics(node => {
 					const value = parseFloat(node.value)
 					// The standard unit to convert (if no unit, we assume the base unit)
 					if (node.unit === unit) {
