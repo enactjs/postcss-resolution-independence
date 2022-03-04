@@ -4,8 +4,8 @@
 
 ## 1.0.1 (December 28, 2021)
 
-* fix security vulnerabilities
+* fixed security vulnerabilities
 
 ## 1.0.0 (January 30, 2019)
 
-* Initial internal release
+* Initial release
