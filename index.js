@@ -61,4 +61,5 @@ module.exports =
 	};
 };
 
-module.exports.postcss = true
+module.exports.postcss = true;
+
