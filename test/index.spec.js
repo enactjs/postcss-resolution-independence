@@ -1,6 +1,6 @@
 const chai = require('chai');
 const postcss = require('postcss');
-const parser = require('postcss-values-parser');
+const {parse} = require('postcss-values-parser');
 const riPlugin = require('..');
 
 global.expect = chai.expect;
@@ -10,7 +10,7 @@ const processValue = ({css, value = 48, unit = 'px'} = {}) => (
 	postcss([riPlugin(opts)])
 			.process(css || `width: ${value}${unit};`, {from: undefined})
 			.then(function (result) {
-		return parser(result.root.nodes[0].value, {loose:true}).parse();
+		return parse(result.root.nodes[0].value, {ignoreUnknownWords:true});
 	})
 );
 
@@ -30,48 +30,48 @@ describe('resolution-independence options', function () {
 	it('should handle the baseSize option', function () {
 		opts.baseSize = 32;
 		return processValue().then(out => {
-			expect(parseFloat(out.nodes[0].nodes[0].value)).to.equal(1.5);
-			expect(out.nodes[0].nodes[0].unit).to.equal('rem');
+			expect(parseFloat(out.nodes[0].value)).to.equal(1.5);
+			expect(out.nodes[0].unit).to.equal('rem');
 		});
 	});
 
 	it('should handle the riUnit option', function () {
 		opts.riUnit = 'vh';
 		return processValue().then(out => {
-			expect(parseFloat(out.nodes[0].nodes[0].value)).to.equal(2);
-			expect(out.nodes[0].nodes[0].unit).to.equal('vh');
+			expect(parseFloat(out.nodes[0].value)).to.equal(2);
+			expect(out.nodes[0].unit).to.equal('vh');
 		});
 	});
 
 	it('should handle the unit option', function () {
 		opts.unit = 'em';
 		return processValue({unit: 'em'}).then(out => {
-			expect(parseFloat(out.nodes[0].nodes[0].value)).to.equal(2);
-			expect(out.nodes[0].nodes[0].unit).to.equal('rem');
+			expect(parseFloat(out.nodes[0].value)).to.equal(2);
+			expect(out.nodes[0].unit).to.equal('rem');
 		});
 	});
 
 	it('should handle the absoluteUnit option', function () {
 		opts.absoluteUnit = 'abspx';
 		return processValue({unit: 'abspx'}).then(out => {
-			expect(parseFloat(out.nodes[0].nodes[0].value)).to.equal(48);
-			expect(out.nodes[0].nodes[0].unit).to.equal('px');
+			expect(parseFloat(out.nodes[0].value)).to.equal(48);
+			expect(out.nodes[0].unit).to.equal('px');
 		});
 	});
 
 	it('should handle a minUnitSize option value of 0', function () {
 		opts.minUnitSize = 0;
 		return processValue({value: 0.24}).then(out => {
-			expect(parseFloat(out.nodes[0].nodes[0].value)).to.equal(0.01);
-			expect(out.nodes[0].nodes[0].unit).to.equal('rem');
+			expect(parseFloat(out.nodes[0].value)).to.equal(0.01);
+			expect(out.nodes[0].unit).to.equal('rem');
 		});
 	});
 
 	it('should handle the minUnitSize option', function () {
 		opts.minUnitSize = 10;
 		return processValue({value: 9}).then(out => {
-			expect(parseFloat(out.nodes[0].nodes[0].value)).to.equal(9);
-			expect(out.nodes[0].nodes[0].unit).to.equal('px');
+			expect(parseFloat(out.nodes[0].value)).to.equal(9);
+			expect(out.nodes[0].unit).to.equal('px');
 		});
 	});
 
@@ -79,8 +79,8 @@ describe('resolution-independence options', function () {
 		opts.minSize = 12;
 		opts.minUnitSize = 24;
 		return processValue().then(out => {
-			expect(parseFloat(out.nodes[0].nodes[0].value)).to.equal(24);
-			expect(out.nodes[0].nodes[0].unit).to.equal('px');
+			expect(parseFloat(out.nodes[0].value)).to.equal(24);
+			expect(out.nodes[0].unit).to.equal('px');
 		});
 	});
 
@@ -88,8 +88,8 @@ describe('resolution-independence options', function () {
 		opts.baseSize = 33;
 		opts.precision = 2;
 		return processValue().then(out => {
-			expect(parseFloat(out.nodes[0].nodes[0].value)).to.equal(1.45);
-			expect(out.nodes[0].nodes[0].unit).to.equal('rem');
+			expect(parseFloat(out.nodes[0].value)).to.equal(1.45);
+			expect(out.nodes[0].unit).to.equal('rem');
 		});
 	});
 
