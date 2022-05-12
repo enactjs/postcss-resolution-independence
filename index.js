@@ -1,5 +1,4 @@
-const postcss = require('postcss');
-const parser = require('postcss-values-parser');
+const {parse} = require('postcss-values-parser');
 
 /**
 * The configurable options that can be passed into `ResolutionIndependence`.
@@ -21,7 +20,7 @@ const parser = require('postcss-values-parser');
 * @property {Number} precision=5 - How precise our measurements will be, namely the maximum amount
 *	of fractional digits that will appear in our converted measurements.
 */
-module.exports = postcss.plugin('postcss-resolution-independence',
+module.exports =
 		({
 			baseSize = 24,
 			riUnit = 'rem',
@@ -33,28 +32,33 @@ module.exports = postcss.plugin('postcss-resolution-independence',
 		} = {}) => {
 	const minScaleFactor = minSize / baseSize;
 
-	return (css) => {
-		css.walkDecls(decl => {
-			const nodes = parser(decl.value, {loose: true}).parse()
-			nodes.walkNumberNodes(node => {
-				const value = parseFloat(node.value)
-				// The standard unit to convert (if no unit, we assume the base unit)
-				if (node.unit === unit) {
-					const scaledValue = Math.abs(value * minScaleFactor);
-					if (scaledValue && scaledValue <= minUnitSize) {
-						if (Math.abs(value) >= minUnitSize) {
-							node.value = minUnitSize * (value < 0 ? -1 : 1);
+	return {
+		postcssPlugin: 'postcss-resolution-independence',
+		Once (css) {
+			css.walkDecls(decl => {
+				const nodes = parse(decl.value, {ignoreUnknownWords: true})
+				nodes.walkNumerics(node => {
+					const value = parseFloat(node.value)
+					// The standard unit to convert (if no unit, we assume the base unit)
+					if (node.unit === unit) {
+						const scaledValue = Math.abs(value * minScaleFactor);
+						if (scaledValue && scaledValue <= minUnitSize) {
+							if (Math.abs(value) >= minUnitSize) {
+								node.value = minUnitSize * (value < 0 ? -1 : 1);
+							}
+						} else {
+							node.value = parseFloat((value / baseSize).toFixed(precision));
+							node.unit = riUnit;
 						}
-					} else {
-						node.value = parseFloat((value / baseSize).toFixed(precision));
-						node.unit = riUnit;
+					} else if (node.unit === absoluteUnit) {
+						// The absolute unit to convert to our standard unit
+						node.unit = unit;
 					}
-				} else if (node.unit === absoluteUnit) {
-					// The absolute unit to convert to our standard unit
-					node.unit = unit;
-				}
+				});
+				decl.value = nodes.toString();
 			});
-			decl.value = nodes.toString();
-		});
+		}
 	};
-});
+};
+
+module.exports.postcss = true;
