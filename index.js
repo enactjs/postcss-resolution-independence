@@ -31,32 +31,35 @@ module.exports =
 			precision = 5
 		} = {}) => {
 	const minScaleFactor = minSize / baseSize;
+	let isAbsoluteUnit = false;
 
 	return {
 		postcssPlugin: 'postcss-resolution-independence',
-		Once (css) {
-			css.walkDecls(decl => {
-				const nodes = parse(decl.value, {ignoreUnknownWords: true})
-				nodes.walkNumerics(node => {
-					const value = parseFloat(node.value)
-					// The standard unit to convert (if no unit, we assume the base unit)
-					if (node.unit === unit) {
-						const scaledValue = Math.abs(value * minScaleFactor);
-						if (scaledValue && scaledValue <= minUnitSize) {
-							if (Math.abs(value) >= minUnitSize) {
-								node.value = minUnitSize * (value < 0 ? -1 : 1);
-							}
-						} else {
-							node.value = parseFloat((value / baseSize).toFixed(precision));
-							node.unit = riUnit;
+		Declaration (decl) {
+			// If an absolute unit already converted to a standard unit, skip the below process.
+			if (isAbsoluteUnit) return;
+
+			const nodes = parse(decl.value, {ignoreUnknownWords: true})
+			nodes.walkNumerics(node => {
+				const value = parseFloat(node.value)
+				// The standard unit to convert (if no unit, we assume the base unit)
+				if (node.unit === unit) {
+					const scaledValue = Math.abs(value * minScaleFactor);
+					if (scaledValue && scaledValue <= minUnitSize) {
+						if (Math.abs(value) >= minUnitSize) {
+							node.value = minUnitSize * (value < 0 ? -1 : 1);
 						}
-					} else if (node.unit === absoluteUnit) {
-						// The absolute unit to convert to our standard unit
-						node.unit = unit;
+					} else {
+						node.value = parseFloat((value / baseSize).toFixed(precision));
+						node.unit = riUnit;
 					}
-				});
-				decl.value = nodes.toString();
+				} else if (node.unit === absoluteUnit) {
+					// The absolute unit to convert to our standard unit
+					node.unit = unit;
+					isAbsoluteUnit = true;
+				}
 			});
+			decl.value = nodes.toString();
 		}
 	};
 };
