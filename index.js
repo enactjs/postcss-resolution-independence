@@ -36,14 +36,13 @@ module.exports =
 	return {
 		postcssPlugin: 'postcss-resolution-independence',
 		Declaration (decl) {
-			// If an absolute unit already converted to a standard unit, skip the below process.
-			if (isAbsoluteUnit) return;
-
 			const nodes = parse(decl.value, {ignoreUnknownWords: true})
 			nodes.walkNumerics(node => {
 				const value = parseFloat(node.value)
 				// The standard unit to convert (if no unit, we assume the base unit)
 				if (node.unit === unit) {
+					// If an absolute unit(abspx, apx) already converted to a standard unit(px), skip the below process.
+					if (isAbsoluteUnit) return;
 					const scaledValue = Math.abs(value * minScaleFactor);
 					if (scaledValue && scaledValue <= minUnitSize) {
 						if (Math.abs(value) >= minUnitSize) {
