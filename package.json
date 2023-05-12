@@ -27,7 +27,7 @@
   ],
   "main": "index.js",
   "engines": {
-    "node": ">=6.4.1"
+    "node": ">= 14.0.0"
   },
   "dependencies": {
     "postcss-values-parser": "^6.0.2"
