@@ -1,7 +1,6 @@
 ## unreleased
 
 * Updated `mocha` version to `^10.2.0`
-* Updated the minimum version of Node to `14.0.0`.
 
 ## 1.1.0 (May 12, 2022)
 
