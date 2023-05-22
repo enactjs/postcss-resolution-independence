@@ -1,6 +1,6 @@
 ## unreleased
 
-* Updated `mocha` version to `^10.2.0`
+* Updated dependencies
 
 ## 1.1.0 (May 12, 2022)
 
