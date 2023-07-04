@@ -1,3 +1,7 @@
+## 1.1.1 (July 4, 2023)
+
+* Updated dependencies
+
 ## 1.1.0 (May 12, 2022)
 
 * Updated dependency of `postcss` related modules
