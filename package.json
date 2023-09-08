@@ -33,9 +33,9 @@
     "postcss-values-parser": "^6.0.2"
   },
   "devDependencies": {
-    "chai": "^4.3.7",
+    "chai": "^4.3.8",
     "mocha": "^10.2.0",
-    "postcss": "^8.4.26"
+    "postcss": "^8.4.29"
   },
   "peerDependencies": {
     "postcss": "^8.0.0"
