@@ -1,3 +1,7 @@
+## 1.1.3 (September 27, 2023)
+
+* Updated dependencies
+
 ## 1.1.2 (July 25, 2023)
 
 * Updated dependencies
