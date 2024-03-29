@@ -1,3 +1,7 @@
+## [unreleased]
+
+* Removed `chai` dependency
+
 ## 1.1.5 (February 20, 2024)
 
 * Updated dependencies

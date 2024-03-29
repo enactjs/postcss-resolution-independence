@@ -33,7 +33,7 @@
     "postcss-values-parser": "^6.0.2"
   },
   "devDependencies": {
-    "chai": "^4.3.10",
+    "expect": "^29.7.0",
     "mocha": "^10.3.0",
     "postcss": "^8.4.38"
   },
