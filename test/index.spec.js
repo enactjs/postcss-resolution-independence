@@ -1,9 +1,7 @@
-const jestExpect = require('expect');
 const postcss = require('postcss');
 const {parse} = require('postcss-values-parser');
 const riPlugin = require('..');
 
-global.expect = jestExpect.expect;
 let opts;
 
 const processValue = ({css, value = 48, unit = 'px'} = {}) => (
@@ -96,7 +94,7 @@ describe('resolution-independence options', function () {
 });
 
 describe('resolution-independence conversions', function () {
-	before(function () {
+	beforeAll(function () {
 		opts = {
 			baseSize: 24,
 			riUnit: 'rem',
