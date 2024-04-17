@@ -33,15 +33,13 @@
     "postcss-values-parser": "^6.0.2"
   },
   "devDependencies": {
-    "chai": "^4.3.10",
-    "mocha": "^10.3.0",
     "postcss": "^8.4.38"
   },
   "peerDependencies": {
     "postcss": "^8.0.0"
   },
   "scripts": {
-    "test": "mocha --reporter spec"
+    "test": "enact test"
   },
   "keywords": [
     "postcss plugins",
