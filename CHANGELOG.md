@@ -1,4 +1,4 @@
-## [unreleased]
+## 1.1.6 (July 22, 2024)
 
 * Removed `chai` and `mocha` dependencies
 
