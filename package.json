@@ -30,7 +30,7 @@
     "node": ">=6.4.1"
   },
   "dependencies": {
-    "postcss-values-parser": "^7.0.0"
+    "postcss-values-parser": "^6.0.2"
   },
   "devDependencies": {
     "postcss": "^8.5.6"
