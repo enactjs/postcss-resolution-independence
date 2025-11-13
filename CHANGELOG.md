@@ -1,3 +1,7 @@
+## 1.1.9 (November 13, 2025)
+
+* Updated dependencies
+
 ## 1.1.8 (March 28, 2025)
 
 * Updated dependencies
