@@ -1,4 +1,4 @@
-## 1.1.10 (April 7, 2026)
+## 1.1.10 (April 8, 2026)
 
 * Updated dependencies
 
