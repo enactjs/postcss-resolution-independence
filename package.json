@@ -1,6 +1,6 @@
 {
   "name": "postcss-resolution-independence",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "Resolution independence conversion plugin for PostCSS",
   "author": "Jason Robitaille <jason.robitaille@lge.com>",
   "homepage": "http://www.enactjs.com",
@@ -33,7 +33,7 @@
     "postcss-values-parser": "^6.0.2"
   },
   "devDependencies": {
-    "postcss": "^8.5.8"
+    "postcss": "^8.5.15"
   },
   "peerDependencies": {
     "postcss": "^8.0.0"

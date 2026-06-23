@@ -1,3 +1,7 @@
+## 1.1.11 (June 23, 2026)
+
+* Updated dependencies
+
 ## 1.1.10 (April 8, 2026)
 
 * Updated dependencies
