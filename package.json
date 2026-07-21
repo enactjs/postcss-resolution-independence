@@ -27,19 +27,20 @@
   ],
   "main": "index.js",
   "engines": {
-    "node": ">=6.4.1"
+    "node": ">=20.19.0"
   },
   "dependencies": {
-    "postcss-values-parser": "^6.0.2"
+    "postcss-values-parser": "^7.0.1"
   },
   "devDependencies": {
-    "postcss": "^8.5.15"
+    "postcss": "^8.5.15",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "postcss": "^8.0.0"
   },
   "scripts": {
-    "test": "enact test"
+    "test": "vitest run --globals"
   },
   "keywords": [
     "postcss plugins",

@@ -1,3 +1,10 @@
+## 1.1.12 (July 21, 2026)
+
+* Upgraded `postcss-values-parser` from v6 to v7 with API migration
+* Adopted position-based string replacement for improved formatting preservation
+* Replaced `enact test` with `vitest` for ESM module compatibility
+* Updated minimum Node.js requirement to `>=20.19.0`
+
 ## 1.1.11 (June 23, 2026)
 
 * Updated dependencies

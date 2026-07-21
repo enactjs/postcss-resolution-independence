@@ -1,4 +1,8 @@
-const {parse} = require('postcss-values-parser');
+const {parse, registerWalkers, Container, Root} = require('postcss-values-parser');
+
+// Register walker methods (walkNumerics, walkWords, etc.) on Container and Root prototypes
+registerWalkers(Container);
+registerWalkers(Root);
 
 /**
 * The configurable options that can be passed into `ResolutionIndependence`.
@@ -36,26 +40,41 @@ module.exports =
 		postcssPlugin: 'postcss-resolution-independence',
 		Once (css) {
 			css.walkDecls(decl => {
-				const nodes = parse(decl.value, {ignoreUnknownWords: true})
+				const nodes = parse(decl.value);
+				const replacements = [];
+
 				nodes.walkNumerics(node => {
-					const value = parseFloat(node.value)
+					const value = parseFloat(node.value);
+					const start = node.source.start.offset;
+					const end = node.source.end.offset;
+
 					// The standard unit to convert (if no unit, we assume the base unit)
 					if (node.unit === unit) {
 						const scaledValue = Math.abs(value * minScaleFactor);
 						if (scaledValue && scaledValue <= minUnitSize) {
 							if (Math.abs(value) >= minUnitSize) {
-								node.value = minUnitSize * (value < 0 ? -1 : 1);
+								const newVal = minUnitSize * (value < 0 ? -1 : 1);
+								replacements.push({start, end, text: String(newVal) + unit});
 							}
 						} else {
-							node.value = parseFloat((value / baseSize).toFixed(precision));
-							node.unit = riUnit;
+							const newVal = parseFloat((value / baseSize).toFixed(precision));
+							replacements.push({start, end, text: String(newVal) + riUnit});
 						}
 					} else if (node.unit === absoluteUnit) {
 						// The absolute unit to convert to our standard unit
-						node.unit = unit;
+						replacements.push({start, end, text: String(value) + unit});
 					}
 				});
-				decl.value = nodes.toString();
+
+				// Apply replacements from end to start to preserve offsets
+				if (replacements.length > 0) {
+					let result = decl.value;
+					for (let i = replacements.length - 1; i >= 0; i--) {
+						const {start, end, text} = replacements[i];
+						result = result.substring(0, start) + text + result.substring(end);
+					}
+					decl.value = result;
+				}
 			});
 		}
 	};
